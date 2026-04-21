@@ -1,0 +1,7 @@
+{
+  "base.url": "https://practice.expandtesting.com",
+  "request.timeout": 30000,
+  "log.all.requests": true,
+  "log.all.responses": true
+}
+

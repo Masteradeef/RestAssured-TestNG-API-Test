@@ -1,0 +1,15 @@
+{
+  "BASE_PATH": "/notes/api",
+  "HEALTH_CHECK": "/notes/api/health-check",
+  "USERS_REGISTER": "/notes/api/users/register",
+  "USERS_LOGIN": "/notes/api/users/login",
+  "USERS_PROFILE": "/notes/api/users/profile",
+  "USERS_FORGOT_PASSWORD": "/notes/api/users/forgot-password",
+  "USERS_CHANGE_PASSWORD": "/notes/api/users/change-password",
+  "USERS_DELETE_ACCOUNT": "/notes/api/users/delete-account",
+  "USERS_LOGOUT": "/notes/api/users/logout",
+  "NOTES": "/notes/api/notes",
+  "NOTES_BY_ID": "/notes/api/notes/{id}",
+  "AUTH_TOKEN_HEADER": "x-auth-token"
+}
+

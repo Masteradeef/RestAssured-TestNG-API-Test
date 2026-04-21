@@ -12,8 +12,8 @@ Automates the **Notes API** at [practice.expandtesting.com](https://practice.exp
 src/
 ├── main/java/com/expandtesting/
 │   ├── config/
-│   │   ├── ConfigManager.java          # Singleton – loads config.properties
-│   │   └── EndpointConstants.java      # All endpoint path constants
+│   │   ├── ConfigManager.java          # Singleton – loads config.json (fallback-safe)
+│   │   └── EndpointConstants.java      # Endpoint paths loaded from endpoints.json
 │   ├── clients/
 │   │   ├── BaseApiClient.java          # Shared RequestSpecification
 │   │   ├── HealthClient.java
@@ -27,6 +27,12 @@ src/
 │       ├── AuthHelper.java             # Register + Login helper
 │       └── ResponseValidator.java      # Reusable assertion helpers
 │
+├── main/resources/
+│   └── endpoints.json                  # API endpoint paths + auth header key
+│
+└── test/resources/
+    └── config.json                     # Runtime environment config
+
 └── test/java/com/expandtesting/
     ├── base/BaseTest.java              # @BeforeSuite RestAssured global config
     ├── listeners/ExtentReportListener.java  # HTML report via ExtentReports
@@ -62,31 +68,72 @@ src/
 
 ---
 
+## ⚙️ Configuration Files
+
+### `src/test/resources/config.json`
+Controls runtime settings consumed by `ConfigManager`:
+
+```json
+{
+  "base.url": "https://practice.expandtesting.com",
+  "request.timeout": 30000,
+  "log.all.requests": true,
+  "log.all.responses": true
+}
+```
+
+You can still override any key at runtime using JVM properties (for example `-Dbase.url=...`).
+
+### `src/main/resources/endpoints.json`
+Centralized API paths consumed by `EndpointConstants`:
+
+- `HEALTH_CHECK`
+- `USERS_REGISTER`, `USERS_LOGIN`, `USERS_PROFILE`, `USERS_CHANGE_PASSWORD`, etc.
+- `NOTES`, `NOTES_BY_ID`
+- `AUTH_TOKEN_HEADER`
+
+---
+
 ## 🚀 Running Tests
 
 ### Prerequisites
 - Java 11+
-- Maven 3.6+
+- Maven Wrapper (`mvnw.cmd`/`mvnw`) is included
 
-### Run all tests
-```bash
-mvn clean test
+### Windows (PowerShell)
+
+#### Run all tests
+```powershell
+Set-Location "D:\IdeaProjects"
+.\mvnw.cmd clean test
 ```
 
-### Run smoke tests only
-```bash
-mvn clean test -Dgroups=smoke
+#### Run smoke tests only
+```powershell
+Set-Location "D:\IdeaProjects"
+./mvnw.cmd test -Dgroups=smoke
 ```
 
-### Run regression tests only
-```bash
-mvn clean test -Dgroups=regression
+#### Run regression tests only
+```powershell
+Set-Location "D:\IdeaProjects"
+.\mvnw.cmd clean test -Dgroups=regression
 ```
 
-### Override base URL
-```bash
-mvn clean test -Dbase.url=https://practice.expandtesting.com
+#### Override base URL
+```powershell
+Set-Location "D:\IdeaProjects"
+.\mvnw.cmd clean test -Dbase.url=https://practice.expandtesting.com
 ```
+
+### macOS/Linux
+```bash
+./mvnw clean test
+./mvnw test -Dgroups=smoke
+./mvnw clean test -Dgroups=regression
+./mvnw clean test -Dbase.url=https://practice.expandtesting.com
+```
+
 
 ---
 
@@ -100,7 +147,7 @@ After each run, an **ExtentReports HTML** file is generated in the `reports/` di
 
 | Tool | Purpose |
 |------|---------|
-| Java 11 | Language |
+| Java 11+ (JDK 25 tested) | Language/runtime |
 | Maven | Build & dependency management |
 | Rest Assured 5.x | HTTP client & assertions |
 | TestNG 7.x | Test framework |
